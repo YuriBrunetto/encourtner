@@ -10,6 +10,9 @@ public class Url {
     private String longUrl;
     private String shortCode;
 
+    public Url() {
+    }
+
     public Url(String id, String longUrl, String shortCode) {
         this.id = id;
         this.longUrl = longUrl;
