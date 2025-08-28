@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class EncourtnerApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(EncourtnerApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(EncourtnerApplication.class, args);
+    }
 
 }

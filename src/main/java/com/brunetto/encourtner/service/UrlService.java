@@ -1,5 +1,6 @@
 package com.brunetto.encourtner.service;
 
+import com.brunetto.encourtner.exception.UrlNotFoundException;
 import com.brunetto.encourtner.model.Url;
 import com.brunetto.encourtner.repository.UrlRepository;
 import com.brunetto.encourtner.util.UrlUtil;
@@ -37,8 +38,10 @@ public class UrlService {
     @Transactional
     public Url getOriginalUrlAndIncrementViews(String shortCode) {
         Url url = urlRepository.findByShortCode(shortCode)
-                .orElseThrow(() -> new RuntimeException("URL não encontrada para o código: " + shortCode));
+                .orElseThrow(() -> new UrlNotFoundException("URL não encontrada para o código: " + shortCode));
         url.setViews(url.getViews() + 1);
+        urlRepository.save(url);
+
         return url;
     }
 
