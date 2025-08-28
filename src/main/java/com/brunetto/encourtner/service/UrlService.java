@@ -10,11 +10,9 @@ import java.util.Optional;
 @Service
 public class UrlService {
     private final UrlRepository urlRepository;
-    private final UrlUtil urlUtil;
 
-    public UrlService(UrlRepository urlRepository, UrlUtil urlUtil) {
+    public UrlService(UrlRepository urlRepository) {
         this.urlRepository = urlRepository;
-        this.urlUtil = urlUtil;
     }
 
     public Url generateShortUrl(String longUrl) {
@@ -25,7 +23,7 @@ public class UrlService {
 
         String shortCode;
         do {
-            shortCode = urlUtil.generateRandomString(6);
+            shortCode = UrlUtil.generateRandomString(6);
         } while (urlRepository.existsByShortCode(shortCode));
 
         Url newUrl = new Url();
@@ -37,6 +35,6 @@ public class UrlService {
 
     public Url getOriginalUrl(String shortCode) {
         return urlRepository.findByShortCode(shortCode)
-                .orElseThrow(() -> new RuntimeException("URL não encontrada par o código: " + shortCode));
+                .orElseThrow(() -> new RuntimeException("URL não encontrada para o código: " + shortCode));
     }
 }
