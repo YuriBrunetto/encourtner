@@ -4,6 +4,7 @@ import com.brunetto.encourtner.model.Url;
 import com.brunetto.encourtner.repository.UrlRepository;
 import com.brunetto.encourtner.util.UrlUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -33,8 +34,12 @@ public class UrlService {
         return urlRepository.save(newUrl);
     }
 
-    public Url getOriginalUrl(String shortCode) {
-        return urlRepository.findByShortCode(shortCode)
+    @Transactional
+    public Url getOriginalUrlAndIncrementViews(String shortCode) {
+        Url url = urlRepository.findByShortCode(shortCode)
                 .orElseThrow(() -> new RuntimeException("URL não encontrada para o código: " + shortCode));
+        url.setViews(url.getViews() + 1);
+        return url;
     }
+
 }

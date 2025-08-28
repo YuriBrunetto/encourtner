@@ -9,14 +9,16 @@ public class Url {
     private String id;
     private String longUrl;
     private String shortCode;
+    private int views;
 
     public Url() {
     }
 
-    public Url(String id, String longUrl, String shortCode) {
+    public Url(String id, String longUrl, String shortCode, int views) {
         this.id = id;
         this.longUrl = longUrl;
         this.shortCode = shortCode;
+        this.views = views;
     }
 
     public String getId() {
@@ -41,5 +43,13 @@ public class Url {
 
     public void setShortCode(String shortCode) {
         this.shortCode = shortCode;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
     }
 }
