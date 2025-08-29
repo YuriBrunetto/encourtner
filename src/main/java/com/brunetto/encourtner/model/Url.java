@@ -3,6 +3,8 @@ package com.brunetto.encourtner.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
+
 @Document(collection = "urls")
 public class Url {
     @Id
@@ -10,15 +12,17 @@ public class Url {
     private String longUrl;
     private String shortCode;
     private int views;
+    private LocalDateTime expirationDate;
 
     public Url() {
     }
 
-    public Url(String id, String longUrl, String shortCode, int views) {
+    public Url(String id, String longUrl, String shortCode, int views, LocalDateTime expirationDate) {
         this.id = id;
         this.longUrl = longUrl;
         this.shortCode = shortCode;
         this.views = views;
+        this.expirationDate = expirationDate;
     }
 
     public String getId() {
@@ -51,5 +55,13 @@ public class Url {
 
     public void setViews(int views) {
         this.views = views;
+    }
+
+    public LocalDateTime getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(LocalDateTime expirationDate) {
+        this.expirationDate = expirationDate;
     }
 }

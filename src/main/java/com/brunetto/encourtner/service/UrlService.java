@@ -1,5 +1,6 @@
 package com.brunetto.encourtner.service;
 
+import com.brunetto.encourtner.exception.UrlExpiredException;
 import com.brunetto.encourtner.exception.UrlNotFoundException;
 import com.brunetto.encourtner.model.Url;
 import com.brunetto.encourtner.repository.UrlRepository;
@@ -7,6 +8,7 @@ import com.brunetto.encourtner.util.UrlUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -31,6 +33,8 @@ public class UrlService {
         Url newUrl = new Url();
         newUrl.setLongUrl(longUrl);
         newUrl.setShortCode(shortCode);
+        LocalDateTime now = LocalDateTime.now();
+        newUrl.setExpirationDate(now.plusDays(1));
 
         return urlRepository.save(newUrl);
     }
@@ -39,6 +43,13 @@ public class UrlService {
     public Url getOriginalUrlAndIncrementViews(String shortCode) {
         Url url = urlRepository.findByShortCode(shortCode)
                 .orElseThrow(() -> new UrlNotFoundException("URL não encontrada para o código: " + shortCode));
+
+        boolean urlExpired = url.getExpirationDate().isBefore(LocalDateTime.now());
+
+        if (urlExpired) {
+            throw new UrlExpiredException("A URL para o código " + shortCode + " expirou.");
+        }
+
         url.setViews(url.getViews() + 1);
         urlRepository.save(url);
 

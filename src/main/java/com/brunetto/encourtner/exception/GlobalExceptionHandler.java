@@ -21,4 +21,18 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<Object> handleGlobalException(Exception ex, WebRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        body.put("error", "Erro Interno do Servidor");
+        body.put("message", "Ocorreu um erro inesperado. Tente novamente mais tarde."); // Mensagem genérica para não vazar detalhes
+        body.put("path", request.getDescription(false).replace("uri=", ""));
+
+        System.err.println(ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
