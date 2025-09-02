@@ -57,6 +57,7 @@ public class UrlServiceTest {
         existingUrl.setId("mongo-id");
         existingUrl.setLongUrl(longUrl);
         existingUrl.setShortCode("abc123");
+        existingUrl.setExpirationDate(LocalDateTime.now().plusDays(1));
 
         Mockito.when(urlRepository.findByLongUrl(longUrl)).thenReturn(Optional.of(existingUrl));
 
@@ -69,6 +70,38 @@ public class UrlServiceTest {
         assertThat(result.getLongUrl()).isEqualTo(longUrl);
 
         Mockito.verify(urlRepository, Mockito.never()).save(Mockito.any(Url.class));
+    }
+
+    @Test
+    void shouldGenerateNewUrl_whenExistingUrlIsExpired() {
+        // Arrange
+        String longUrl = "https://www.expirada.com/";
+
+        Url expiredUrl = new Url();
+        expiredUrl.setId("expired-id");
+        expiredUrl.setLongUrl(longUrl);
+        expiredUrl.setShortCode("def456");
+        expiredUrl.setExpirationDate(LocalDateTime.now().minusDays(1));
+
+        Mockito.when(urlRepository.findByLongUrl(longUrl)).thenReturn(Optional.of(expiredUrl));
+
+        Url newUrl = new Url();
+        newUrl.setId("new-id");
+        newUrl.setLongUrl(longUrl);
+        newUrl.setShortCode("xyz789");
+        newUrl.setExpirationDate(LocalDateTime.now().plusDays(1));
+        Mockito.when(urlRepository.save(Mockito.any(Url.class))).thenReturn(newUrl);
+
+        // Act
+        Url result = urlService.generateShortUrl(longUrl);
+
+        // Assert
+        assertThat(result).isNotNull();
+        assertThat(result.getShortCode()).isNotEqualTo("def456");
+        assertThat(result.getShortCode()).isEqualTo("xyz789");
+        assertThat(result.getLongUrl()).isEqualTo(longUrl);
+
+        Mockito.verify(urlRepository, Mockito.times(1)).save(Mockito.any(Url.class));
     }
 
     @Test
