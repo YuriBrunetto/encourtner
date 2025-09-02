@@ -1,6 +1,7 @@
 package com.brunetto.encourtner.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -9,7 +10,10 @@ import java.time.LocalDateTime;
 public class Url {
     @Id
     private String id;
+
+    @Indexed(unique = true)
     private String longUrl;
+
     private String shortCode;
     private int views;
     private LocalDateTime expirationDate;

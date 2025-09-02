@@ -22,7 +22,11 @@ public class UrlService {
     public Url generateShortUrl(String longUrl) {
         Optional<Url> existingUrl = urlRepository.findByLongUrl(longUrl);
         if (existingUrl.isPresent()) {
-            return existingUrl.get();
+            Url url = existingUrl.get();
+
+            if (url.getExpirationDate().isAfter(LocalDateTime.now())) {
+                return url;
+            }
         }
 
         String shortCode;
